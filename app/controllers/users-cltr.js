@@ -64,4 +64,39 @@ usersCltr.list = async (req, res) => {
     }
 }
 
+usersCltr.changeRole = async (req, res) => {
+    const id = req.params.id 
+    const body = req.body 
+    if(id == req.user.id) {
+        return res.status(400).json({ error: 'operation cannot be performed'})
+    } 
+    try {
+        const user = await User.findByIdAndUpdate(id, body, { new: true })
+        res.json(user) 
+    } catch(e) {
+        res.json(e)
+    }   
+}
+
+usersCltr.remove = async (req, res) => {
+    const id = req.params.id 
+    try {
+        const user = await User.findByIdAndDelete(id) 
+        res.json(user) 
+    } catch(e) {
+        res.json(e)
+    }
+}
+
+usersCltr.show = async (req, res) => {
+    const id = req.params.id 
+    console.log(id)
+    try {
+        const user = await User.findById(id)
+        res.json(user)
+    } catch(e) {
+        res.json(e) 
+    }
+}
+
 module.exports = usersCltr 

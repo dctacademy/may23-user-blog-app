@@ -12,6 +12,10 @@ const blogSchema = new Schema({
         type: String,
         default: 'pending',
         enum: ['pending', 'published']
+    },
+    lastEditedBy: {
+        type: Schema.Types.ObjectId,
+        default: null 
     }
 })
 
