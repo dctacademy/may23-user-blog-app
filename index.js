@@ -8,6 +8,7 @@ const routes = require('./config/routes')
 const { authenticateUser, authorizeUser } = require('./app/middlewares/authentication')
 const usersCltr = require('./app/controllers/users-cltr')
 const blogsCltr = require('./app/controllers/blogs-cltr')
+const commentsCltr = require('./app/controllers/comments-cltr')
 
 configureDB()
 app.use(express.json())
@@ -30,8 +31,15 @@ app.put('/api/blogs/:id', authenticateUser, authorizeUser(['admin','author']), b
 app.put('/api/blogs/:id/change-status', authenticateUser, authorizeUser(['moderator']), blogsCltr.changeStatus)
 app.delete('/api/blogs/:id', authenticateUser, authorizeUser(['admin', 'author']), blogsCltr.destroy)
 
+// create api for comments
+app.get('/api/comments', authenticateUser, authorizeUser(['moderator']), commentsCltr.list)
+app.put('/api/comments/:id/approve', authenticateUser, authorizeUser(['moderator']),commentsCltr.approve)
 
-// create an api for editing a blog by the user
+// nested route 
+app.post('/api/blogs/:bId/comments', authenticateUser, commentsCltr.create)
+app.put('/api/blogs/:bId/comments/:cId', authenticateUser, authorizeUser(['moderator', 'user']), commentsCltr.update)
+app.delete('/api/blogs/:bId/comments/:cId', authenticateUser, authorizeUser(['moderator', 'user']), commentsCltr.remove)
+
 
 app.listen(port, () => {
     console.log('server running on port', port)
