@@ -26,6 +26,7 @@ app.put('/api/users/:id/change-role', authenticateUser, authorizeUser(['admin'])
 // create an api for adding a new blog by the user 
 app.get('/api/blogs', blogsCltr.list)
 app.post('/api/blogs', authenticateUser, authorizeUser(['author']), blogsCltr.create)
+app.get('/api/blogs/my-blogs', authenticateUser, blogsCltr.myBlogs)
 app.get('/api/blogs/unpublished', authenticateUser, authorizeUser(['moderator']), blogsCltr.unpublished)
 app.put('/api/blogs/:id', authenticateUser, authorizeUser(['admin','author']), blogsCltr.update)
 app.put('/api/blogs/:id/change-status', authenticateUser, authorizeUser(['moderator']), blogsCltr.changeStatus)

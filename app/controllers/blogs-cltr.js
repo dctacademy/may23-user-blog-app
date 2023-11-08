@@ -70,6 +70,15 @@ blogsCltr.destroy = async (req, res) => {
     }
 }
 
+blogsCltr.myBlogs = async (req, res) => {
+    try {
+        const blogs = await Blog.find({ author: req.user.id })
+        res.json(blogs)
+    } catch(e) {
+        res.json(e) 
+    }
+}
+
 blogsCltr.unpublished = async (req, res) => {
     try {
         const blogs = await Blog.find({ status: 'pending'})
