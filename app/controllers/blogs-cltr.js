@@ -1,7 +1,9 @@
 const Blog = require('../models/blog-model')
 const User = require('../models/user-model')
 const _ = require('lodash')
+const { validationResult } = require('express-validator')
 const blogsCltr = {} 
+
 
 blogsCltr.list = async (req, res) => {
     try {
@@ -12,9 +14,12 @@ blogsCltr.list = async (req, res) => {
     }
 }
 
-
 blogsCltr.create = async (req, res) => {
     const body = _.pick(req.body, ['title' ,'content'])
+    const errors = validationResult(req) 
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
     try {
         const blog = new Blog(body) 
         blog.author = req.user.id 

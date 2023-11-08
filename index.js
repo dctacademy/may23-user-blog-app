@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
+const { checkSchema } = require('express-validator')
 const app = express() 
 const port = process.env.PORT || 3030
 const configureDB = require('./config/db')
@@ -9,6 +10,8 @@ const { authenticateUser, authorizeUser } = require('./app/middlewares/authentic
 const usersCltr = require('./app/controllers/users-cltr')
 const blogsCltr = require('./app/controllers/blogs-cltr')
 const commentsCltr = require('./app/controllers/comments-cltr')
+
+const blogValidationSchema = require('./app/helpers/blog-validation-schema')
 
 configureDB()
 app.use(express.json())
@@ -25,7 +28,7 @@ app.put('/api/users/:id/change-role', authenticateUser, authorizeUser(['admin'])
 
 // create an api for adding a new blog by the user 
 app.get('/api/blogs', blogsCltr.list)
-app.post('/api/blogs', authenticateUser, authorizeUser(['author']), blogsCltr.create)
+app.post('/api/blogs', authenticateUser, authorizeUser(['author']), checkSchema(blogValidationSchema), blogsCltr.create)
 app.get('/api/blogs/my-blogs', authenticateUser, blogsCltr.myBlogs)
 app.get('/api/blogs/unpublished', authenticateUser, authorizeUser(['moderator']), blogsCltr.unpublished)
 app.put('/api/blogs/:id', authenticateUser, authorizeUser(['admin','author']), blogsCltr.update)
