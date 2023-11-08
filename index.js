@@ -40,7 +40,6 @@ app.post('/api/blogs/:bId/comments', authenticateUser, commentsCltr.create)
 app.put('/api/blogs/:bId/comments/:cId', authenticateUser, authorizeUser(['moderator', 'user']), commentsCltr.update)
 app.delete('/api/blogs/:bId/comments/:cId', authenticateUser, authorizeUser(['moderator', 'user']), commentsCltr.remove)
 
-
 app.listen(port, () => {
     console.log('server running on port', port)
 })
